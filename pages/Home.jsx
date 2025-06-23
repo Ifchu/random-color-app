@@ -1,5 +1,3 @@
-// 📁 src/pages/Home.jsx
-
 import { useEffect, useState } from "react";
 import ColorCard from "../components/ColorCard";
 
@@ -8,13 +6,16 @@ function Home() {
   const [colors, setColors] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // 🔐 Проверка дали потребител е логнат (от localStorage)
+  const user = JSON.parse(localStorage.getItem("user"));
+
   // 🟡 Зареждаме цветовете от json-server при първоначално зареждане на компонента
   useEffect(() => {
     fetchColors();
   }, []);
 
   const fetchColors = async () => {
-    const res = await fetch("http://localhost:5000/colors");
+    const res = await fetch("http://localhost:3001/colors");
     const data = await res.json();
     setColors(data);
     setLoading(false);
@@ -30,7 +31,7 @@ function Home() {
   // 🟠 Добавяне на нов цвят в json-server
   const addColor = async () => {
     const newColor = generateRandomColor();
-    const res = await fetch("http://localhost:5000/colors", {
+    const res = await fetch("http://localhost:3001/colors", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newColor),
@@ -39,16 +40,15 @@ function Home() {
     setColors([...colors, added]);
   };
 
-  // 🔴 Изтриване на цвят по ID
+  // 🔴 Изтриване на цвят по ID (само ако има логнат потребител)
   const deleteColor = async (id) => {
-    await fetch(`http://localhost:5000/colors/${id}`, {
+    if (!user) return; // защита от изтриване ако не е логнат
+
+    await fetch(`http://localhost:3001/colors/${id}`, {
       method: "DELETE",
     });
     setColors(colors.filter(color => color.id !== id));
   };
-
-  // 🔐 Проверка дали потребител е логнат (от localStorage)
-  const user = JSON.parse(localStorage.getItem("user"));
 
   return (
     <div className="container">
@@ -61,7 +61,11 @@ function Home() {
         <p>Зареждане...</p>
       ) : (
         colors.map((color) => (
-          <ColorCard key={color.id} color={color} onDelete={deleteColor} />
+          <ColorCard
+            key={color.id}
+            color={color}
+            onDelete={user ? deleteColor : null} // предаваме delete функция само ако е логнат
+          />
         ))
       )}
     </div>
