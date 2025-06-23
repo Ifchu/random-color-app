@@ -1,6 +1,6 @@
 // Импортираме нужните React hook-ове и компонента за визуализиране на цвят
 import { useEffect, useState } from "react";
-import ColorCard from "./components/ColorCard";
+import ColorCard from "../components/ColorCard";
 
 
 // fetch - изпраща HTTP заявка към посочения URL (в случая http://localhost:5000/colors). 
