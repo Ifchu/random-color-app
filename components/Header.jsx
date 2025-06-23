@@ -5,7 +5,7 @@ export default function Header() {
     <header>
       <img src="/src/assets/" alt=" icon" />
       <nav>
-        <Link to="/">Home</Link> | <Link to="/form">Form</Link> | <Link to="/colors">API Colors</Link>
+        <Link to="/">Home</Link> | <Link to="/login">Login</Link> | <Link to="/register">Register</Link>
       </nav>
       <h1>Random Color</h1>
     </header>
