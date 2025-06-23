@@ -1,31 +1,36 @@
+// 📁 src/pages/Home.jsx
+
 import { useEffect, useState } from "react";
 import ColorCard from "../components/ColorCard";
 
 function Home() {
+  // 🔵 Локално състояние: масив с цветове, и флаг за зареждане
   const [colors, setColors] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Зареждане на всички цветове
+  // 🟡 Зареждаме цветовете от json-server при първоначално зареждане на компонента
   useEffect(() => {
     fetchColors();
   }, []);
 
   const fetchColors = async () => {
-    const res = await fetch("http://localhost:5000/colors");
+    const res = await fetch("http://localhost:3001/colors");
     const data = await res.json();
     setColors(data);
     setLoading(false);
   };
 
+  // 🟢 Генериране на случаен HEX цвят и име
   const generateRandomColor = () => {
     const hex = "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
     const name = "Color " + (colors.length + 1);
     return { name, hex };
   };
 
+  // 🟠 Добавяне на нов цвят в json-server
   const addColor = async () => {
     const newColor = generateRandomColor();
-    const res = await fetch("http://localhost:5000/colors", {
+    const res = await fetch("http://localhost:3001/colors", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newColor),
@@ -34,17 +39,23 @@ function Home() {
     setColors([...colors, added]);
   };
 
+  // 🔴 Изтриване на цвят по ID
   const deleteColor = async (id) => {
-    await fetch(`http://localhost:5000/colors/${id}`, {
+    await fetch(`http://localhost:3001/colors/${id}`, {
       method: "DELETE",
     });
     setColors(colors.filter(color => color.id !== id));
   };
 
+  // 🔐 Проверка дали потребител е логнат (от localStorage)
+  const user = JSON.parse(localStorage.getItem("user"));
+
   return (
-    <div style={{ padding: "1rem" }}>
+    <div className="container">
       <h2>Списък с Цветове</h2>
-      <button onClick={addColor}>Добави Случаен Цвят</button>
+
+      {/* Показваме бутона за добавяне само ако има логнат потребител */}
+      {user && <button onClick={addColor}>Добави Случаен Цвят</button>}
 
       {loading ? (
         <p>Зареждане...</p>
