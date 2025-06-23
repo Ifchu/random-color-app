@@ -15,7 +15,7 @@ function Home() {
   }, []);
 
   const fetchColors = async () => {
-    const res = await fetch("http://localhost:3001/colors");
+    const res = await fetch("http://localhost:5000/colors");
     const data = await res.json();
     setColors(data);
     setLoading(false);
@@ -31,7 +31,7 @@ function Home() {
   // 🟠 Добавяне на нов цвят в json-server
   const addColor = async () => {
     const newColor = generateRandomColor();
-    const res = await fetch("http://localhost:3001/colors", {
+    const res = await fetch("http://localhost:5000/colors", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newColor),
@@ -44,7 +44,7 @@ function Home() {
   const deleteColor = async (id) => {
     if (!user) return; // защита от изтриване ако не е логнат
 
-    await fetch(`http://localhost:3001/colors/${id}`, {
+    await fetch(`http://localhost:5000/colors/${id}`, {
       method: "DELETE",
     });
     setColors(colors.filter(color => color.id !== id));
