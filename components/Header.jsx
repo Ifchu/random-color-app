@@ -1,3 +1,4 @@
+// Импортираме Link (за навигация без презареждане) и useNavigate (за  пренасочване)
 import { Link , useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
 
@@ -6,16 +7,17 @@ import { useState, useEffect } from 'react';
 
 function Header() {
 
-  const navigate = useNavigate();
-  const [user, setUser] = useState(null);
-      
+  const navigate = useNavigate(); // Hook за пренасочване към друга страница
+  const [user, setUser] = useState(null); // Състояние за текущия логнат потребител
+     // При зареждане на компонента проверяваме дали има запазен потребител в localStorage 
   useEffect(() => {
     const saved = localStorage.getItem("user");
-    if (saved) {
-      setUser(JSON.parse(saved));
+    if (saved) { 
+      setUser(JSON.parse(saved)); // Преобразуваме JSON string към обект
+
     }
   }, []);
-
+       // Функция за изход — премахваме потребителя от localStorage и пренасочваме към login страницата
     const handleLogout = () => {
     localStorage.removeItem("user");
     setUser(null);
